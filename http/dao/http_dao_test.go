@@ -6,6 +6,13 @@ import (
 	"testing"
 )
 
+type PostEntity struct {
+	UserId int    `json:"userId"`
+	Id     int    `json:"id"`
+	Title  string `json:"title"`
+	Body   string `json:"body"`
+}
+
 func TestGetRequest(t *testing.T) {
 	var dao IHttpDao
 
@@ -43,6 +50,82 @@ func TestGetRequest(t *testing.T) {
 
 	if string(body) != expectedResponseBody {
 		t.Fatalf("Expected GET reponse body does not match actual response body")
+	}
+}
+
+func TestGetAsMap(t *testing.T) {
+	var dao IHttpDao
+
+	// Create API Dao for Json Placeholder API
+	defaultHeaders := make(map[string]string)
+
+	dao = NewHttpDao(
+		"jsonplaceholder",
+		"https://jsonplaceholder.typicode.com",
+		defaultHeaders,
+	)
+
+	var data map[string]interface{}
+	err := dao.GetAsInterface("/posts/1", &data)
+
+	t.Log(data)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if data["id"] != 1.0 {
+		t.Fatalf("Id should be 1, but is %d", data["id"])
+	}
+
+	if data["userId"] != 1.0 {
+		t.Fatalf("UserId should be 1, but is %d", data["userId"])
+	}
+
+	if data["title"] != "sunt aut facere repellat provident occaecati excepturi optio reprehenderit" {
+		t.Fatalf("Title should be 'sunt aut facere repellat provident occaecati excepturi optio reprehenderit', but is '%s'", data["title"])
+	}
+
+	if data["body"] == "" {
+		t.Fatalf("Body should not be empty")
+	}
+}
+
+func TestGetAsStruct(t *testing.T) {
+	var dao IHttpDao
+
+	// Create API Dao for Json Placeholder API
+	defaultHeaders := make(map[string]string)
+
+	dao = NewHttpDao(
+		"jsonplaceholder",
+		"https://jsonplaceholder.typicode.com",
+		defaultHeaders,
+	)
+
+	var postEntity PostEntity
+	err := dao.GetAsInterface("/posts/1", &postEntity)
+
+	t.Log(postEntity)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if postEntity.Id != 1 {
+		t.Fatalf("Id should be 1, but is %d", postEntity.Id)
+	}
+
+	if postEntity.UserId != 1 {
+		t.Fatalf("UserId should be 1, but is %d", postEntity.UserId)
+	}
+
+	if postEntity.Title != "sunt aut facere repellat provident occaecati excepturi optio reprehenderit" {
+		t.Fatalf("Title should be 'sunt aut facere repellat provident occaecati excepturi optio reprehenderit', but is '%s'", postEntity.Title)
+	}
+
+	if postEntity.Body == "" {
+		t.Fatalf("Body should not be empty")
 	}
 }
 

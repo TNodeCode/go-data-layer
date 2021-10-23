@@ -1,7 +1,9 @@
 package httpdao
 
 import (
+	"encoding/json"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -12,6 +14,39 @@ type HttpDao struct {
 	Url            string
 	DefaultHeaders map[string]string
 	AuthHeader     string
+}
+
+func (dao HttpDao) jsonUnmarshal(res *http.Response) (*map[string]interface{}, error) {
+	body, err := ioutil.ReadAll(res.Body)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var entity map[string]interface{}
+	err = json.Unmarshal(body, &entity)
+
+	if err != nil {
+		return nil, err
+	} else {
+		return &entity, nil
+	}
+}
+
+func (dao HttpDao) responseAsInterface(res *http.Response, entity *interface{}) error {
+	body, err := ioutil.ReadAll(res.Body)
+
+	if err != nil {
+		return err
+	}
+
+	err = json.Unmarshal(body, entity)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (dao HttpDao) SetAuthHeader(authHeader string) {
@@ -92,6 +127,17 @@ func (dao HttpDao) GetWithHeaders(urlString string, headers map[string]string) (
 	}
 
 	return res, err
+}
+
+func (dao HttpDao) GetAsInterface(urlString string, entity interface{}) error {
+	res, err := dao.Get(urlString)
+	err = dao.responseAsInterface(res, &entity)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (dao HttpDao) Post(urlString string, body io.Reader) (*http.Response, error) {
