@@ -2,6 +2,12 @@
 
 Package that abstracts data sources and provides useful methods to access them.
 
+#### Installation
+
+```bash
+$ go get github.com/tnodecode/go-data-layer
+```
+
 ## HTTP Dao
 
 Send GET Request to HTTP Endpoint
@@ -13,13 +19,13 @@ import (
 	"fmt"
 	"io/ioutil"
 
-	httpdao "github.com/tnodecode/data-layer/http/dao"
+	httpdao "github.com/tnodecode/go-data-layer/http/dao"
 )
 
 func main() {
     // Create Data Access Object for HTTP endpoint
 	headers := make(map[string]string)
-	dao := httpdao.NewHttpDao("dao1", "https://jsonplaceholder.typicode.com", h)
+	dao := httpdao.NewHttpDao("dao1", "https://jsonplaceholder.typicode.com", headers)
 
     // Send GET Request
 	res, err := dao.Get("/posts/1", headers)

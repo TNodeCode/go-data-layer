@@ -68,7 +68,11 @@ func (dao HttpDao) NewDeleteRequest(urlString string, headers map[string]string)
 	return req, err
 }
 
-func (dao HttpDao) Get(urlString string, headers map[string]string) (*http.Response, error) {
+func (dao HttpDao) Get(urlString string) (*http.Response, error) {
+	return dao.GetWithHeaders(urlString, dao.DefaultHeaders)
+}
+
+func (dao HttpDao) GetWithHeaders(urlString string, headers map[string]string) (*http.Response, error) {
 	client := &http.Client{}
 
 	if headers == nil {
@@ -90,7 +94,11 @@ func (dao HttpDao) Get(urlString string, headers map[string]string) (*http.Respo
 	return res, err
 }
 
-func (dao HttpDao) Post(urlString string, headers map[string]string, body io.Reader) (*http.Response, error) {
+func (dao HttpDao) Post(urlString string, body io.Reader) (*http.Response, error) {
+	return dao.PostWithHeaders(urlString, dao.DefaultHeaders, body)
+}
+
+func (dao HttpDao) PostWithHeaders(urlString string, headers map[string]string, body io.Reader) (*http.Response, error) {
 	client := &http.Client{}
 
 	if headers == nil {
@@ -112,7 +120,11 @@ func (dao HttpDao) Post(urlString string, headers map[string]string, body io.Rea
 	return res, err
 }
 
-func (dao HttpDao) Put(urlString string, headers map[string]string, body io.Reader) (*http.Response, error) {
+func (dao HttpDao) Put(urlString string, body io.Reader) (*http.Response, error) {
+	return dao.PutWithHeaders(urlString, dao.DefaultHeaders, body)
+}
+
+func (dao HttpDao) PutWithHeaders(urlString string, headers map[string]string, body io.Reader) (*http.Response, error) {
 	client := &http.Client{}
 
 	if headers == nil {
@@ -134,7 +146,11 @@ func (dao HttpDao) Put(urlString string, headers map[string]string, body io.Read
 	return res, err
 }
 
-func (dao HttpDao) Delete(urlString string, headers map[string]string) (*http.Response, error) {
+func (dao HttpDao) Delete(urlString string) (*http.Response, error) {
+	return dao.DeleteWithHeaders(urlString, dao.DefaultHeaders)
+}
+
+func (dao HttpDao) DeleteWithHeaders(urlString string, headers map[string]string) (*http.Response, error) {
 	client := &http.Client{}
 
 	if headers == nil {

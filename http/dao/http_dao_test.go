@@ -7,7 +7,8 @@ import (
 )
 
 func TestGetRequest(t *testing.T) {
-	var dao *HttpDao
+	var dao IHttpDao
+
 	// Create API Dao for Json Placeholder API
 	defaultHeaders := make(map[string]string)
 
@@ -17,7 +18,7 @@ func TestGetRequest(t *testing.T) {
 		defaultHeaders,
 	)
 
-	res, err := dao.Get("/posts/1", defaultHeaders)
+	res, err := dao.Get("/posts/1")
 
 	if err != nil {
 		t.Fatal(err)
@@ -46,7 +47,8 @@ func TestGetRequest(t *testing.T) {
 }
 
 func TestPostRequest(t *testing.T) {
-	var dao *HttpDao
+	var dao IHttpDao
+
 	// Create API Dao for Json Placeholder API
 	defaultHeaders := make(map[string]string)
 
@@ -63,7 +65,7 @@ func TestPostRequest(t *testing.T) {
 		`  "body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"` + "\n" +
 		`}`
 
-	res, err := dao.Post("/posts", defaultHeaders, strings.NewReader(requestBody))
+	res, err := dao.Post("/posts", strings.NewReader(requestBody))
 
 	if err != nil {
 		t.Fatal(err)
@@ -89,7 +91,8 @@ func TestPostRequest(t *testing.T) {
 }
 
 func TestPutRequest(t *testing.T) {
-	var dao *HttpDao
+	var dao IHttpDao
+
 	// Create API Dao for Json Placeholder API
 	defaultHeaders := make(map[string]string)
 
@@ -106,7 +109,7 @@ func TestPutRequest(t *testing.T) {
 		`  "body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"` + "\n" +
 		`}`
 
-	res, err := dao.Put("/posts/1", defaultHeaders, strings.NewReader(requestBody))
+	res, err := dao.Put("/posts/1", strings.NewReader(requestBody))
 
 	if err != nil {
 		t.Fatal(err)
@@ -132,7 +135,8 @@ func TestPutRequest(t *testing.T) {
 }
 
 func TestDeleteRequest(t *testing.T) {
-	var dao *HttpDao
+	var dao IHttpDao
+
 	// Create API Dao for Json Placeholder API
 	defaultHeaders := make(map[string]string)
 
@@ -142,7 +146,7 @@ func TestDeleteRequest(t *testing.T) {
 		defaultHeaders,
 	)
 
-	res, err := dao.Delete("/posts/1", defaultHeaders)
+	res, err := dao.Delete("/posts/1")
 
 	if err != nil {
 		t.Fatal(err)
