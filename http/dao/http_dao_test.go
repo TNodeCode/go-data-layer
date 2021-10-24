@@ -173,6 +173,32 @@ func TestPostRequest(t *testing.T) {
 	}
 }
 
+func TestPostAsStruct(t *testing.T) {
+	var dao IHttpDao
+
+	// Create API Dao for Json Placeholder API
+	defaultHeaders := make(map[string]string)
+
+	dao = NewHttpDao(
+		"jsonplaceholder",
+		"https://jsonplaceholder.typicode.com",
+		defaultHeaders,
+	)
+
+	var postEntity PostEntity
+	err := dao.PostAsInterface("/posts", strings.NewReader("{\"id\": 101}"), &postEntity)
+
+	t.Log(postEntity)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if postEntity.Id != 101 {
+		t.Fatalf("Id should be 101, but is %d", postEntity.Id)
+	}
+}
+
 func TestPutRequest(t *testing.T) {
 	var dao IHttpDao
 
@@ -217,6 +243,32 @@ func TestPutRequest(t *testing.T) {
 	}
 }
 
+func TestPutAsStruct(t *testing.T) {
+	var dao IHttpDao
+
+	// Create API Dao for Json Placeholder API
+	defaultHeaders := make(map[string]string)
+
+	dao = NewHttpDao(
+		"jsonplaceholder",
+		"https://jsonplaceholder.typicode.com",
+		defaultHeaders,
+	)
+
+	var postEntity PostEntity
+	err := dao.PutAsInterface("/posts/100", strings.NewReader("{\"id\": 100}"), &postEntity)
+
+	t.Log(postEntity)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if postEntity.Id != 100 {
+		t.Fatalf("Id should be 100, but is %d", postEntity.Id)
+	}
+}
+
 func TestDeleteRequest(t *testing.T) {
 	var dao IHttpDao
 
@@ -249,5 +301,31 @@ func TestDeleteRequest(t *testing.T) {
 
 	if string(body) != expectedResponseBody {
 		t.Fatalf("Expected DELETE reponse body does not match actual response body")
+	}
+}
+
+func TestDeleteAsStruct(t *testing.T) {
+	var dao IHttpDao
+
+	// Create API Dao for Json Placeholder API
+	defaultHeaders := make(map[string]string)
+
+	dao = NewHttpDao(
+		"jsonplaceholder",
+		"https://jsonplaceholder.typicode.com",
+		defaultHeaders,
+	)
+
+	var postEntity PostEntity
+	err := dao.DeleteAsInterface("/posts/100", &postEntity)
+
+	t.Log(postEntity)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if postEntity.Id != 0 {
+		t.Fatalf("Id should be 0, but is %d", postEntity.Id)
 	}
 }

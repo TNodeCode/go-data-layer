@@ -16,24 +16,7 @@ type HttpDao struct {
 	AuthHeader     string
 }
 
-func (dao HttpDao) jsonUnmarshal(res *http.Response) (*map[string]interface{}, error) {
-	body, err := ioutil.ReadAll(res.Body)
-
-	if err != nil {
-		return nil, err
-	}
-
-	var entity map[string]interface{}
-	err = json.Unmarshal(body, &entity)
-
-	if err != nil {
-		return nil, err
-	} else {
-		return &entity, nil
-	}
-}
-
-func (dao HttpDao) responseAsInterface(res *http.Response, entity *interface{}) error {
+func (dao HttpDao) MapResponseBodyToInterface(res *http.Response, entity *interface{}) error {
 	body, err := ioutil.ReadAll(res.Body)
 
 	if err != nil {
@@ -131,7 +114,7 @@ func (dao HttpDao) GetWithHeaders(urlString string, headers map[string]string) (
 
 func (dao HttpDao) GetAsInterface(urlString string, entity interface{}) error {
 	res, err := dao.Get(urlString)
-	err = dao.responseAsInterface(res, &entity)
+	err = dao.MapResponseBodyToInterface(res, &entity)
 
 	if err != nil {
 		return err
@@ -166,6 +149,17 @@ func (dao HttpDao) PostWithHeaders(urlString string, headers map[string]string, 
 	return res, err
 }
 
+func (dao HttpDao) PostAsInterface(urlString string, body io.Reader, entity interface{}) error {
+	res, err := dao.Post(urlString, body)
+	err = dao.MapResponseBodyToInterface(res, &entity)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (dao HttpDao) Put(urlString string, body io.Reader) (*http.Response, error) {
 	return dao.PutWithHeaders(urlString, dao.DefaultHeaders, body)
 }
@@ -192,6 +186,17 @@ func (dao HttpDao) PutWithHeaders(urlString string, headers map[string]string, b
 	return res, err
 }
 
+func (dao HttpDao) PutAsInterface(urlString string, body io.Reader, entity interface{}) error {
+	res, err := dao.Put(urlString, body)
+	err = dao.MapResponseBodyToInterface(res, &entity)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (dao HttpDao) Delete(urlString string) (*http.Response, error) {
 	return dao.DeleteWithHeaders(urlString, dao.DefaultHeaders)
 }
@@ -216,6 +221,17 @@ func (dao HttpDao) DeleteWithHeaders(urlString string, headers map[string]string
 	}
 
 	return res, err
+}
+
+func (dao HttpDao) DeleteAsInterface(urlString string, entity interface{}) error {
+	res, err := dao.Delete(urlString)
+	err = dao.MapResponseBodyToInterface(res, &entity)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (dao HttpDao) PostFormData(urlString string, headers map[string]string, data url.Values) (*http.Response, error) {
